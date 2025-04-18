@@ -6,6 +6,7 @@ import logging
 import aiohttp
 
 from src.config import settings
+from src.tg.handlers import admin_router
 
 from webhook import router as webhook_router
 
@@ -38,6 +39,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     bot = settings.bot
     dp = settings.dp
+    dp.include_router(admin_router)
 
     polling_task = asyncio.create_task(dp.start_polling(bot))
     app.state.polling_task = polling_task

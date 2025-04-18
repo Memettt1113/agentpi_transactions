@@ -28,6 +28,7 @@ async def process_response(response: dict) -> TransactionDTO:
     amount_in = None
     amount_out = None
     ton_in = None
+    name = None
 
     for action in actions:
         action_type = action.get("type")
@@ -47,6 +48,7 @@ async def process_response(response: dict) -> TransactionDTO:
             decimals_out = jetton_master_out.get("decimals", 0)
             user_wallet = swap.get("user_wallet").get("address")
             ton_in = swap.get("ton_in", 0)
+            name = jetton_master_out.get("name", "Stepan COIN")
 
             break
 
@@ -61,11 +63,14 @@ async def process_response(response: dict) -> TransactionDTO:
                 decimals_out = transfer.get("jetton").get("decimals", 0)
                 user_wallet = transfer.get("senders_wallet")
 
+            name = transfer.get("jetton").get("name", "Stepan COIN")
+
     created_at = datetime.fromtimestamp(
         response.get("timestamp"),
         timezone.utc
     )
     transaction = {
+        "name": name,
         "tx_hash": event_id,
         "user_wallet": user_wallet,
         "created_at": created_at,

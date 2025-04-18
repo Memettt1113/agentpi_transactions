@@ -15,40 +15,35 @@ if TYPE_CHECKING:
     from src.dto import TransactionDTO
 
 bot = settings.bot
-chat_ids = settings.chat_ids.split(',')
+chat_ids = settings.chats
 
 logger = getLogger(__name__)
 
 
 async def send_message_to_group(transaction: TransactionDTO) -> None:
+
+    if settings.is_stop:
+        return
+
     url = f"https://tonscan.org/tx/{transaction.tx_hash}"
 
     message = (
-        f"Новая покупка <b>AGENTPI</b> от {settings.min_price} TON\n\n"
+        f"Новая покупка <b>{transaction.name}</b> от {settings.min_price} TON\n\n"
         f"🔒 Хэш: <code>{transaction.tx_hash}</code>\n"
-        f"💰 Получено: {transaction.amount} AGENTPI\n"
+        f"💰 Получено: {transaction.amount} {transaction.name}\n"
         f"💵 Цена: {transaction.price} TON\n"
-        f"👤 Покупатель: <code>{transaction.user_wallet}</code>\n"
-        f"📎 Ссылка: {url}"
+        f"👤 Покупатель: <code>{transaction.user_wallet}</code>"
     )
 
     buttons = [
         [InlineKeyboardButton(
-            text="🌍 Канал",
-            url="https://t.me/AgentPi_Official"
-        )],
-        [InlineKeyboardButton(
             text="📎 Сделка",
             url=url
         )],
-        [InlineKeyboardButton(
-            text="👨‍💻 Creator",
-            url="https://t.me/sut_adm1"
-        )]
     ]
 
     keyboard = InlineKeyboardBuilder(markup=buttons)
-    keyboard.adjust(1, 1)
+    keyboard.adjust(1)
 
     for chat_id in chat_ids:
         await bot.send_message(

@@ -10,6 +10,7 @@ class TransactionTypeEnum(Enum):
 
 @dataclass
 class TransactionDTO:
+    name: str
     tx_hash: str
     user_wallet: str
     created_at: datetime

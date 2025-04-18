@@ -1,6 +1,9 @@
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings
 from aiogram import Bot, Dispatcher
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 
 class Settings(BaseSettings):
@@ -9,10 +12,11 @@ class Settings(BaseSettings):
     server_host: str
     server_port: int
 
-    min_price: int
-
     tg_token: SecretStr
-    chat_ids: str
+    admins: str
+    min_price: float = 10.0
+    is_stop: bool = False
+    chats: list = []
 
     _bot: Bot = None
     _dp: Dispatcher = None
