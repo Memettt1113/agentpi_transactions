@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    container_name: transaction_bot
+    ports:
+      - "${SERVER_PORT}:8000"
+    restart: always
+    volumes:
+      - .:/app
